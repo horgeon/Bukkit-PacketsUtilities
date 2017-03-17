@@ -1,0 +1,35 @@
+language: java
+
+sudo: false
+
+jdk:
+  - oraclejdk8
+
+env:
+  - secure: "fpO43+OsRpItGzU5GFWwa3amcX8ySQuBYMpOwRIUcX2XHa1wk8uYYNKBBI1/ftQMHkBOR8ytHcvkOKxuMw/V9KlGjSfPv6rQdMXCai1YWb8gOFqxZAUQ63tF08+Vvs6xbgEO6L/i2nbnko7NOjQrpEKrAF8s4wJJWgXU9U3IIU0xthsRYHQPstyuqIa3m1Z+8uRxiVl/g7xex6AwCOlJ9suii+pZ0jTlaC5PZM3UUhUbs5x0XAIg1BUiCVHmyvbtTTvTLp3EZSPxB4tVBxwLwEGNFYLqu25xOhXuyDxyG2yc5QTkPMKCZydx2yDaPKl0PbjhSBXuojP5Rhgh8EVDPWMoUWi+GYTD2v/sMc6Z2DdEtdGz/6ENU9+3i1bOYLkS7NBbCng0fTxGxP7i68azyQSr6EzjP0PYetjRBZNKBiuSgaokHNCFhRCB9bNoqYtCH2EerEjnKc/09+9L2EVfgyqBa2r3tX9Om8yJvFB77Mm4QzVmHHeOtbBgwke8WqkQ3SmpOXIXkHyNlMPHXEXbk3U2HoWXyDtvNcWHzcUxx8yJtdwtMBk8JL5atVtWmyMMi1dI//cwQ7UTvzJBX2Zl3mLnnjmZTsqAYyAp09fiAsm+aDQ1/Gi2mLnQKuhLYkksvELtPvCZC095yhQDntt386Bck/R17d92MW4rAoIU8Vo="
+
+cache:
+ directories:
+   - $HOME/.m2
+
+before_install:
+  - export MAVEN_SKIP_RC=true
+  - mvn -Xmx32M -v | grep 1.7.0; if [ $? = 0 ]; then export MAVEN_OPTS="-XX:MaxPermSize=240M"; else export MAVEN_OPTS="-XX:MaxMetaspaceSize=240M -XX:CompressedClassSpaceSize=240M"; fi
+  - export MAVEN_OPTS="-Xmx512M $MAVEN_OPTS"
+
+script:
+  - mvn
+
+after_success:
+  - echo '<?xml version="1.0" encoding="UTF-8"?><settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><servers><server><username>ci</username><password>${env.CI_PASSWD}</password><id>horgeon-repo</id></server></servers></settings>' > settings.xml
+  - mvn -s settings.xml deploy
+  - rm settings.xml
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "M0gMv9qIWhlO7yupk/fh9Do/PKH7WaWOJJsA/8Vhqs2t1s1QnxRY0LZOI7WnGIsywpnWj/bldoa8nlTuHSEtWnQ07RpF+aRY16NmfMHYCLz+0UCPm+NA1MDbvck6A+PCmRgtnn4Wh2FGWYUgT2+K1o0DCg/Xba0TzOSV6Vxu+cuZjS49Hoi573WGxwubDainaE5QZxVnLARg9aQXr2G6ixV92bIcV2Zn+gHsEgKdlVdv4vnZNEYJlDmScCN/sbvnLCmWVrv7yNY0e7avlMvLDxWWzch7zc/eg9iomisTiO9DO1VMIpxqeOlG185gzeiq7ZXL1l2kQf2s54BV5oCtetxhRQHI+TWmyH89pXf76Of5EKL8V+KU5gcEda9ry/JcDQDc9Ea+UGcqdu07M3Gex3LN8t3mqSP/qT+FWWM6dp7RH3gBZmoL/Sp+3pkRRm8F3eRBQvHctq/ADML32vqZDwYSftIM8iSF3eb5TQVRqtqK77lpoiguHcKj/znhfSC1M5mlH9J00kXxlO5gU02xlcj3cO+H7V20sVaiup7VQv+tfKK0fJgKkdzKN2BGZe0OLJe2pk8YrP9thRFYe7wQfJF17fBLYwpt2x2utpmPf/DXh5sJWFGvE12o6vBFWlc5M11rVw4ivOaEqH6HZ8iD/qXL7tR0KgivCGu43gUVQOY="
+  file: "${TRAVIS_BUILD_DIR}/target/packets-utilities.jar"
+  on:
+    tags: true
+    repo: horgeon/Bukkit-PacketsUtilities
