@@ -18,7 +18,7 @@ public class Scoreboard {
 	private boolean created = false;
 	private final VirtualTeam[] lines = new VirtualTeam[ 15 ];
 	private final Player player;
-	private String objectiveName;
+	private String objectiveName, objectiveDisplayName;
 
 	/**
 	 * Create a scoreboard sign for a given player and using a specifig objective name
@@ -27,8 +27,20 @@ public class Scoreboard {
 	 * @param objectiveName the name of the scoreboard sign (displayed at the top of the scoreboard)
 	 */
 	public Scoreboard( Player player, String objectiveName ) {
+		this( player, objectiveName, objectiveName );
+	}
+
+	/**
+	 * Create a scoreboard sign for a given player and using a specifig objective name
+	 *
+	 * @param player               the player viewing the scoreboard sign
+	 * @param objectiveName        the name of the scoreboard sign
+	 * @param objectiveDisplayName the display name of the scoreboard sign (displayed at the top of the scoreboard)
+	 */
+	public Scoreboard( Player player, String objectiveName, String objectiveDisplayName ) {
 		this.player = player;
 		this.objectiveName = objectiveName;
+		this.objectiveDisplayName = objectiveDisplayName;
 	}
 
 	/**
@@ -40,7 +52,7 @@ public class Scoreboard {
 		WrapperPlayServerScoreboardObjective packet = new WrapperPlayServerScoreboardObjective();
 		packet.setMode( WrapperPlayServerScoreboardObjective.Mode.ADD_OBJECTIVE );
 		packet.setName( this.objectiveName );
-		packet.setDisplayName( this.objectiveName );
+		packet.setDisplayName( this.objectiveDisplayName );
 		packet.sendPacket( player );
 
 		WrapperPlayServerScoreboardDisplayObjective dispacket = new WrapperPlayServerScoreboardDisplayObjective();
