@@ -181,8 +181,8 @@ public class Scoreboard {
 	}
 
 	/*
-		Factories
-		 */
+	Factories
+	 */
 	private void sendScore( String line, int score ) {
 		WrapperPlayServerScoreboardScore packet = new WrapperPlayServerScoreboardScore();
 		packet.setScoreboardAction( EnumWrappers.ScoreboardAction.CHANGE );

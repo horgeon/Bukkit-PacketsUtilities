@@ -33,7 +33,7 @@ public class WrapperPlayServerCustomSoundEffect_v1_9 extends WrapperPlayServerCu
 	 */
 	@Override
 	public float getPitch() {
-		return handle.getFloat().read( 3 );
+		return handle.getIntegers().read( 3 );
 	}
 
 	/**

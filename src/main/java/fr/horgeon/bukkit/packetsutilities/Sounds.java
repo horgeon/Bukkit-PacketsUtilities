@@ -48,9 +48,9 @@ public class Sounds {
 		soundPacket.setSoundCategory( EnumWrappers.SoundCategory.valueOf( category.name() ) );
 		soundPacket.setVolume( volume );
 		soundPacket.setPitch( pitch );
-		soundPacket.setX( (int) loc.getX() << 8 );
-		soundPacket.setY( (int) loc.getY() << 8 );
-		soundPacket.setZ( (int) loc.getZ() << 8 );
+		soundPacket.setX( (int) loc.getX() * 8 );
+		soundPacket.setY( (int) loc.getY() * 8 );
+		soundPacket.setZ( (int) loc.getZ() * 8 );
 		soundPacket.sendPacket( p );
 	}
 
