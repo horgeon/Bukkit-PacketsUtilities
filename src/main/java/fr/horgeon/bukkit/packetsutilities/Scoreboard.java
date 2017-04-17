@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class Scoreboard {
 	private boolean created = false;
-	private final VirtualTeam[] lines = new VirtualTeam[ 15 ];
+	private final FakeTeam[] lines = new FakeTeam[ 15 ];
 	private final Player player;
 	private String objectiveName, objectiveDisplayName;
 
@@ -80,7 +80,7 @@ public class Scoreboard {
 		packet.setName( this.objectiveName );
 		packet.sendPacket( player );
 
-		for( VirtualTeam team : lines )
+		for( FakeTeam team : lines )
 			if( team != null )
 				team.removeTeam( player );
 
@@ -111,7 +111,7 @@ public class Scoreboard {
 	 * @param value the new value for the scoreboard line
 	 */
 	public void setLine( int line, String value ) {
-		VirtualTeam team = getOrCreateTeam( line );
+		FakeTeam team = getOrCreateTeam( line );
 		String old = team.getCurrentPlayer();
 
 		if( old != null && created )
@@ -127,7 +127,7 @@ public class Scoreboard {
 	 * @param line the line to remove
 	 */
 	public void removeLine( int line ) {
-		VirtualTeam team = getOrCreateTeam( line );
+		FakeTeam team = getOrCreateTeam( line );
 		String old = team.getCurrentPlayer();
 
 		if( old != null && created ) {
@@ -153,9 +153,9 @@ public class Scoreboard {
 	/**
 	 * Get the team assigned to a line
 	 *
-	 * @return the {@link VirtualTeam} used to display this line
+	 * @return the {@link FakeTeam} used to display this line
 	 */
-	public VirtualTeam getTeam( int line ) {
+	public FakeTeam getTeam( int line ) {
 		if( line > 14 || line < 0 )
 			return null;
 		return getOrCreateTeam( line );
@@ -166,16 +166,16 @@ public class Scoreboard {
 			return;
 
 		int score = 15 - line;
-		VirtualTeam val = getOrCreateTeam( line );
+		FakeTeam val = getOrCreateTeam( line );
 		val.sendLine( player );
 
 		sendScore( val.getCurrentPlayer(), score );
 		val.reset();
 	}
 
-	private VirtualTeam getOrCreateTeam( int line ) {
+	private FakeTeam getOrCreateTeam( int line ) {
 		if( lines[ line ] == null )
-			lines[ line ] = new VirtualTeam( "__fakeScore" + line );
+			lines[ line ] = new FakeTeam( "__fakeScore" + line );
 
 		return lines[ line ];
 	}
@@ -198,157 +198,5 @@ public class Scoreboard {
 		packet.setObjectiveName( this.objectiveName );
 		packet.setScoreboardAction( EnumWrappers.ScoreboardAction.REMOVE );
 		packet.sendPacket( player );
-	}
-
-	/**
-	 * This class is used to manage the content of a line. Advanced users can use it as they want, but they are encouraged to read and understand the
-	 * code before doing so. Use these methods at your own risk.
-	 */
-	public class VirtualTeam {
-		private final String name;
-		private String prefix;
-		private String suffix;
-		private String currentPlayer;
-		private String oldPlayer;
-
-		private boolean prefixChanged, suffixChanged, playerChanged = false;
-		private boolean first = true;
-
-		private VirtualTeam( String name, String prefix, String suffix ) {
-			this.name = name;
-			this.prefix = prefix;
-			this.suffix = suffix;
-		}
-
-		private VirtualTeam( String name ) {
-			this( name, "", "" );
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public String getPrefix() {
-			return prefix;
-		}
-
-		public void setPrefix( String prefix ) {
-			if( this.prefix == null || !this.prefix.equals( prefix ) )
-				this.prefixChanged = true;
-			this.prefix = prefix;
-		}
-
-		public String getSuffix() {
-			return suffix;
-		}
-
-		public void setSuffix( String suffix ) {
-			if( this.suffix == null || !this.suffix.equals( prefix ) )
-				this.suffixChanged = true;
-			this.suffix = suffix;
-		}
-
-		private WrapperPlayServerScoreboardTeam createPacket( int mode ) {
-			WrapperPlayServerScoreboardTeam packet = new WrapperPlayServerScoreboardTeam();
-			packet.setName( name );
-			packet.setMode( mode );
-			packet.setDisplayName( "" );
-			packet.setPrefix( prefix );
-			packet.setSuffix( suffix );
-			packet.setColor( 0 );
-			packet.setPackOptionData( 0 );
-			packet.setNameTagVisibility( "always" );
-
-			return packet;
-		}
-
-		public void createTeam( Player player ) {
-			createPacket( WrapperPlayServerScoreboardTeam.Mode.TEAM_CREATED ).sendPacket( player );
-		}
-
-		public void updateTeam( Player player ) {
-			createPacket( WrapperPlayServerScoreboardTeam.Mode.TEAM_UPDATED ).sendPacket( player );
-		}
-
-		public void removeTeam( Player player ) {
-			WrapperPlayServerScoreboardTeam packet = new WrapperPlayServerScoreboardTeam();
-			packet.setMode( WrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED );
-			packet.setName( name );
-
-			first = true;
-			packet.sendPacket( player );
-		}
-
-		public void setPlayer( String name ) {
-			if( this.currentPlayer == null || !this.currentPlayer.equals( name ) )
-				this.playerChanged = true;
-			this.oldPlayer = this.currentPlayer;
-			this.currentPlayer = name;
-		}
-
-		public void sendLine( Player player ) {
-			if( first ) {
-				createTeam( player );
-			} else if( prefixChanged || suffixChanged ) {
-				updateTeam( player );
-			}
-
-			if( first || playerChanged ) {
-				if( oldPlayer != null )                                        // remove these two lines ?
-					addOrRemovePlayer( player, 4, oldPlayer );    //
-				changePlayer( player );
-			}
-
-			if( first )
-				first = false;
-		}
-
-		public void reset() {
-			prefixChanged = false;
-			suffixChanged = false;
-			playerChanged = false;
-			oldPlayer = null;
-		}
-
-		public void changePlayer( Player player ) {
-			addOrRemovePlayer( player, 3, currentPlayer );
-		}
-
-		public void addOrRemovePlayer( Player player, int mode, String playerName ) {
-			WrapperPlayServerScoreboardTeam packet = new WrapperPlayServerScoreboardTeam();
-			packet.setName( name );
-			packet.setMode( mode );
-
-			List<String> players = new ArrayList<String>();
-			players.add( playerName );
-			packet.setPlayers( players );
-			packet.sendPacket( player );
-		}
-
-		public String getCurrentPlayer() {
-			return currentPlayer;
-		}
-
-		public String getValue() {
-			return getPrefix() + getCurrentPlayer() + getSuffix();
-		}
-
-		public void setValue( String value ) {
-			if( value.length() <= 16 ) {
-				setPrefix( "" );
-				setSuffix( "" );
-				setPlayer( value );
-			} else if( value.length() <= 32 ) {
-				setPrefix( value.substring( 0, 16 ) );
-				setPlayer( value.substring( 16 ) );
-				setSuffix( "" );
-			} else if( value.length() <= 48 ) {
-				setPrefix( value.substring( 0, 16 ) );
-				setPlayer( value.substring( 16, 32 ) );
-				setSuffix( value.substring( 32 ) );
-			} else {
-				throw new IllegalArgumentException( "Too long value ! Max 48 characters, value was " + value.length() + " !" );
-			}
-		}
 	}
 }
