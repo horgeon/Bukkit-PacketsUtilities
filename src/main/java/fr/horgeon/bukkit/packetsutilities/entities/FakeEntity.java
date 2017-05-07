@@ -191,7 +191,7 @@ public class FakeEntity {
 		return watcher;
 	}
 
-	public WrapperPlayServerSpawnEntityLiving prepareCreate() {
+	protected WrapperPlayServerSpawnEntityLiving prepareCreate() {
 		WrapperPlayServerSpawnEntityLiving spawnMob = new WrapperPlayServerSpawnEntityLiving();
 
 		spawnMob.setEntityID( id );
@@ -205,7 +205,7 @@ public class FakeEntity {
 		return spawnMob;
 	}
 
-	public WrapperPlayServerEntityDestroy prepareDestroy() {
+	protected WrapperPlayServerEntityDestroy prepareDestroy() {
 		WrapperPlayServerEntityDestroy destroyMe = new WrapperPlayServerEntityDestroy();
 		destroyMe.setEntityIds( new int[]{ id } );
 
