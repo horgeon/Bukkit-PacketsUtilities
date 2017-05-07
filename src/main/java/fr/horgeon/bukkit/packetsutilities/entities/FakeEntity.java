@@ -54,7 +54,7 @@ public class FakeEntity {
 		this.location = location;
 		this.manager = manager;
 		this.id = NEXT_ID++;
-		this.uuid = generateUuid( PREFIX, id );
+		this.uuid = generateUniqueId( PREFIX, id );
 	}
 
 	public FakeEntity( EntityType type, Location location, ProtocolManager manager, UUID uuid ) {
@@ -81,7 +81,7 @@ public class FakeEntity {
 		this.players.remove( player );
 	}
 
-	public static UUID generateUuid( String prefix, int id ) {
+	public static UUID generateUniqueId( String prefix, int id ) {
 		SecureRandom random = new SecureRandom();
 		StringBuilder uuidSb = new StringBuilder( prefix );
 		uuidSb.append( id );
