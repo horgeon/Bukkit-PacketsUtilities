@@ -182,21 +182,25 @@ public class FakeEntity {
 		this.createds.put( player.getName(), true );
 	}
 
-	public WrapperPlayServerSpawnEntityLiving prepareCreate() {
-		WrapperPlayServerSpawnEntityLiving spawnMob = new WrapperPlayServerSpawnEntityLiving();
-		WrappedDataWatcher watcher = new WrappedDataWatcher();
-
+	protected WrappedDataWatcher prepareCreateMetadata( WrappedDataWatcher watcher ) {
 		byte flags = (byte) ( ( visible ? (byte) 0 : METADATA_FLAGS_INVISIBLE ) | ( glowing ? METADATA_FLAGS_GLOWING : (byte) 0  ) );
 		watcher = prepareMetadata( watcher, METADATA_FLAGS, flags );
 		watcher = prepareMetadata( watcher, METADATA_SILENT, silent );
 		//watcher = prepareMetadata( watcher, METADATA_NO_GRAVITY, !gravity );
+
+		return watcher;
+	}
+
+	public WrapperPlayServerSpawnEntityLiving prepareCreate() {
+		WrapperPlayServerSpawnEntityLiving spawnMob = new WrapperPlayServerSpawnEntityLiving();
 
 		spawnMob.setEntityID( id );
 		spawnMob.setType( type );
 		spawnMob.setX( location.getX() );
 		spawnMob.setY( location.getY() );
 		spawnMob.setZ( location.getZ() );
-		spawnMob.setMetadata( watcher );
+		spawnMob.setMetadata( prepareCreateMetadata( new WrappedDataWatcher() ) );
+		spawnMob.setUniqueId( uuid );
 
 		return spawnMob;
 	}

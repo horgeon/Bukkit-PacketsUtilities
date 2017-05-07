@@ -34,23 +34,8 @@ public class FakeSlime extends FakeEntity {
 	}
 
 	@Override
-	public WrapperPlayServerSpawnEntityLiving prepareCreate() {
-		WrapperPlayServerSpawnEntityLiving spawnMob = new WrapperPlayServerSpawnEntityLiving();
-		WrappedDataWatcher watcher = new WrappedDataWatcher();
-
-		byte flags = (byte) ( ( visible ? (byte) 0 : METADATA_FLAGS_INVISIBLE ) | ( glowing ? METADATA_FLAGS_GLOWING : (byte) 0  ) );
-		watcher = prepareMetadata( watcher, METADATA_FLAGS, flags );
-		watcher = prepareMetadata( watcher, METADATA_SILENT, silent );
+	protected WrappedDataWatcher prepareCreateMetadata( WrappedDataWatcher watcher ) {
 		watcher = prepareMetadata( watcher, METADATA_SLIME_SIZE, size );
-		//watcher = prepareMetadata( watcher, METADATA_NO_GRAVITY, !gravity );
-
-		spawnMob.setEntityID( id );
-		spawnMob.setType( type );
-		spawnMob.setX( location.getX() );
-		spawnMob.setY( location.getY() );
-		spawnMob.setZ( location.getZ() );
-		spawnMob.setMetadata( watcher );
-
-		return spawnMob;
+		return super.prepareCreateMetadata( watcher );
 	}
 }
