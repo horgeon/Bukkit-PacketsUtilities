@@ -171,8 +171,10 @@ public class FakeEntity {
 		WrapperPlayServerSpawnEntityLiving spawnMob = prepareCreate();
 
 		for( Player player : players ) {
-			sendPacket( player, spawnMob.getHandle() );
-			this.createds.put( player.getName(), true );
+			if( !createds.get( player.getName() ) ) {
+				sendPacket( player, spawnMob.getHandle() );
+				this.createds.put( player.getName(), true );
+			}
 		}
 	}
 
@@ -216,8 +218,10 @@ public class FakeEntity {
 		WrapperPlayServerEntityDestroy destroyMe = prepareDestroy();
 
 		for( Player player : players ) {
-			sendPacket( player, destroyMe.getHandle() );
-			this.createds.remove( player.getName() );
+			if( createds.get( player.getName() ) ) {
+				sendPacket( player, destroyMe.getHandle() );
+				this.createds.remove( player.getName() );
+			}
 		}
 	}
 
