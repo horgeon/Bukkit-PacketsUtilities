@@ -1,0 +1,6 @@
+name: PacketsUtilities
+main: fr.horgeon.bukkit.packetsutilities.Plugin
+version: ${project.version}
+description: ${project.description}
+author: [Horgeon]
+depend: [ProtocolLib]
