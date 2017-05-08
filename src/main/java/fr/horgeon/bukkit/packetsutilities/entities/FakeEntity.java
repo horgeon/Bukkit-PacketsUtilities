@@ -3,6 +3,7 @@ package fr.horgeon.bukkit.packetsutilities.entities;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
 import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityLiving;
+import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
@@ -49,26 +50,26 @@ public class FakeEntity {
 	protected Location location;
 	protected ProtocolManager manager;
 
-	public FakeEntity( EntityType type, Location location, ProtocolManager manager ) {
+	public FakeEntity( EntityType type, Location location ) {
 		this.type = type;
 		this.location = location;
-		this.manager = manager;
+		this.manager = ProtocolLibrary.getProtocolManager();
 		this.id = NEXT_ID++;
 		this.uuid = generateUniqueId( PREFIX, id );
 	}
 
-	public FakeEntity( EntityType type, Location location, ProtocolManager manager, UUID uuid ) {
+	public FakeEntity( EntityType type, Location location, UUID uuid ) {
 		this.type = type;
 		this.location = location;
-		this.manager = manager;
+		this.manager = ProtocolLibrary.getProtocolManager();
 		this.id = NEXT_ID++;
 		this.uuid = uuid;
 	}
 
-	public FakeEntity( EntityType type, Location location, ProtocolManager manager, int id, UUID uuid ) {
+	public FakeEntity( EntityType type, Location location, int id, UUID uuid ) {
 		this.type = type;
 		this.location = location;
-		this.manager = manager;
+		this.manager = ProtocolLibrary.getProtocolManager();
 		this.id = id;
 		this.uuid = uuid;
 	}

@@ -15,16 +15,16 @@ public class FakeSlime extends FakeEntity {
 
 	protected int size = 1;
 
-	public FakeSlime( Location location, ProtocolManager manager ) {
-		super( EntityType.SLIME, location, manager );
+	public FakeSlime( Location location ) {
+		super( EntityType.SLIME, location );
 	}
 
-	public FakeSlime( Location location, ProtocolManager manager, UUID uuid ) {
-		super( EntityType.SLIME, location, manager, uuid );
+	public FakeSlime( Location location, UUID uuid ) {
+		super( EntityType.SLIME, location, uuid );
 	}
 
-	public FakeSlime( Location location, ProtocolManager manager, int id, UUID uuid ) {
-		super( EntityType.SLIME, location, manager, id, uuid );
+	public FakeSlime( Location location, int id, UUID uuid ) {
+		super( EntityType.SLIME, location, id, uuid );
 	}
 
 	public void setSize( int size ) {
