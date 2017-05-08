@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.horgeon.bukkit</groupId>
 	<artifactId>packets-utilities</artifactId>
-	<version>1.3</version>
+	<version>1.4</version>
 	<name>Bukkit Packets Utilities</name>
 	<description>Utility functions for Bukkit plugins using network packets</description>
 	<url>https://horgeon.fr/</url>
