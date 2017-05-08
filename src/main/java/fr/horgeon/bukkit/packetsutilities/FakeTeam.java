@@ -83,7 +83,10 @@ public class FakeTeam {
 	private boolean first = true;
 
 	public FakeTeam( String name, String prefix, String suffix ) {
-		this.name = name.substring( 0, 16 );
+		if( name.length() > 16 )
+			this.name = name.substring( 0, 16 );
+		else
+			this.name = name;
 		this.prefix = prefix;
 		this.suffix = suffix;
 	}
